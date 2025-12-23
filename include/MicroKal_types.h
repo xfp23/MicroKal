@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2025
  * 
  */
-#ifndef __MICROKAL_H__
-#define __MICROKAL_H__
+#ifndef __MICROKAL_TYPES_H__
+#define __MICROKAL_TYPES_H__
 
 #include "stdint.h"
 

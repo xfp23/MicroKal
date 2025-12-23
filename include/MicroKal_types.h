@@ -36,8 +36,6 @@ typedef struct
                 // 建议初始值：根据传感器噪声范围设置，例如0.1~5
 } MicroKal_Conf_t;
 
-typedef struct MicroKal_Obj_t *MicroKal_Handle_t;
-
 typedef struct MicroKal_Obj_t
 {
     MicroKal_Conf_t conf;
@@ -47,6 +45,8 @@ typedef struct MicroKal_Obj_t
     float H;            // 测量系数
     float Gain;         // 卡尔曼增益
 } MicroKal_Obj_t;
+
+typedef struct MicroKal_Obj_t *MicroKal_Handle_t;
 
 #ifdef __cplusplus
 }

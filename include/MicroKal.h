@@ -31,20 +31,40 @@ extern "C" {
  */
 MicroKal_State_t MicroKal_Init(MicroKal_Handle_t *handle, MicroKal_Conf_t *conf);
 
+// /**
+//  * @brief Update the Kalman filter with a new measurement
+//  *
+//  * This function performs a single-step Kalman filter update:
+//  * 1. Predict the next state
+//  * 2. Update the estimate with the measurement
+//  * 3. Update the covariance and compute the Kalman gain
+//  *
+//  * @param handle Pointer to the filter handle
+//  * @param measure New measurement input
+//  * @param result Pointer to store the filtered output
+//  * @return MicroKal_State_t Status of the update (MICROKAL_OK or MICROKAL_ERR)
+//  */
+// MicroKal_State_t MicroKal_TimerHandler(MicroKal_Handle_t *handle, float measure, float *result);
+
 /**
- * @brief Update the Kalman filter with a new measurement
- *
- * This function performs a single-step Kalman filter update:
- * 1. Predict the next state
- * 2. Update the estimate with the measurement
- * 3. Update the covariance and compute the Kalman gain
- *
- * @param handle Pointer to the filter handle
- * @param measure New measurement input
- * @param result Pointer to store the filtered output
- * @return MicroKal_State_t Status of the update (MICROKAL_OK or MICROKAL_ERR)
+ * @brief Update the Kalman filter with a new measurement 
+ * 
+ *  This function performs a single-step Kalman flter update:
+ *  1. predict the next state
+ *  2. Update the estimate with the measurement
+ *  3. Update the covariace and compute the Kalman gain
+ * 
+ * @param handle handle Pointer to the filter handle
+ * @param measure measure New measrement input
+ * @param result result Pointer to store the filtered output
+ * @return MicroKal_State_t MicroKal_State_t Status of the update (MICROKAL_OK or MICROKAL_ERR)
  */
-MicroKal_State_t MicroKal_TimerHandler(MicroKal_Handle_t *handle, float measure, float *result);
+MicroKal_State_t MicroKal_UpdateF32(MicroKal_Handle_t *handle,float measure,float *result);
+
+
+MicroKal_State_t MicroKal_UpdateF64(MicroKal_Handle_t *handle,double measure,double *result);
+
+MicroKal_State_t MicroKal_UpdateU32(MicroKal_Handle_t *handle,uint32_t measure,uint32_t *result);
 
 /**
  * @brief Modify the filter configuration (Q and R) at runtime

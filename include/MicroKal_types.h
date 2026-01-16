@@ -39,7 +39,7 @@ typedef struct
 typedef struct MicroKal_Obj_t
 {
     MicroKal_Conf_t conf;
-    float predictValue; // 当前滤波值
+    double predictValue; // 当前滤波值
     float P;            // 协方差
     float A;            // 系统传递系数
     float H;            // 测量系数

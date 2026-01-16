@@ -22,7 +22,83 @@ MicroKal_State_t MicroKal_Init(MicroKal_Handle_t *handle, MicroKal_Conf_t *conf)
     return MICROKAL_OK;
 }
 
-MicroKal_State_t MicroKal_TimerHandler(MicroKal_Handle_t *handle, float measure, float *result)
+// MicroKal_State_t MicroKal_TimerHandler(MicroKal_Handle_t *handle, float measure, float *result)
+// {
+//     if (handle == NULL || *handle == NULL || result == NULL) {
+//         return MICROKAL_ERR;
+//     }
+
+//     MicroKal_Obj_t *obj = *handle;
+
+//     // 预测
+//     obj->predictValue = obj->A * obj->predictValue;
+//     obj->P = obj->A * obj->P * obj->A + obj->conf.Q;
+
+//     // 卡尔曼增益
+//     obj->Gain = obj->P * obj->H / (obj->P * obj->H * obj->H + obj->conf.R);
+
+//     // 更新
+//     obj->predictValue = obj->predictValue + obj->Gain * (measure - obj->H * obj->predictValue);
+//     obj->P = (1 - obj->Gain * obj->H) * obj->P;
+
+//     // 防止协方差变负
+//     if (obj->P < 1e-6f) obj->P = 1e-6f;
+
+//     *result = obj->predictValue;
+//     return MICROKAL_OK;
+// }
+
+MicroKal_State_t MicroKal_ModifyConf(MicroKal_Handle_t *handle, MicroKal_Conf_t *conf)
+{
+    if (handle == NULL || *handle == NULL || conf == NULL) {
+        return MICROKAL_ERR;
+    }
+
+    (*handle)->conf.Q = conf->Q;
+    (*handle)->conf.R = conf->R;
+
+    return MICROKAL_OK;
+}
+
+MicroKal_State_t MicroKal_DeInit(MicroKal_Handle_t *handle)
+{
+    if (handle == NULL || *handle == NULL) {
+        return MICROKAL_ERR;
+    }
+
+    free(*handle);
+    *handle = NULL;
+
+    return MICROKAL_OK;
+}
+
+MicroKal_State_t MicroKal_UpdateF32(MicroKal_Handle_t *handle,float measure,float *result)
+{
+    if (handle == NULL || *handle == NULL || result == NULL) {
+        return MICROKAL_ERR;
+    }
+
+    MicroKal_Obj_t *obj = *handle;
+
+    // 预测
+    obj->predictValue = obj->A * obj->predictValue;
+    obj->P = obj->A * obj->P * obj->A + obj->conf.Q;
+
+    // 卡尔曼增益
+    obj->Gain = obj->P * obj->H / (obj->P * obj->H * obj->H + obj->conf.R);
+
+    // 更新
+    obj->predictValue = obj->predictValue + obj->Gain * (measure - obj->H * obj->predictValue);
+    obj->P = (1 - obj->Gain * obj->H) * obj->P;
+
+    // 防止协方差变负
+    if (obj->P < 1e-6f) obj->P = 1e-6f;
+
+    *result = (float)obj->predictValue;
+    return MICROKAL_OK;    
+}
+
+MicroKal_State_t MicroKal_UpdateF64(MicroKal_Handle_t *handle,double measure,double *result)
 {
     if (handle == NULL || *handle == NULL || result == NULL) {
         return MICROKAL_ERR;
@@ -48,26 +124,28 @@ MicroKal_State_t MicroKal_TimerHandler(MicroKal_Handle_t *handle, float measure,
     return MICROKAL_OK;
 }
 
-MicroKal_State_t MicroKal_ModifyConf(MicroKal_Handle_t *handle, MicroKal_Conf_t *conf)
+MicroKal_State_t MicroKal_UpdateU32(MicroKal_Handle_t *handle,uint32_t measure,uint32_t *result)
 {
-    if (handle == NULL || *handle == NULL || conf == NULL) {
+    if (handle == NULL || *handle == NULL || result == NULL) {
         return MICROKAL_ERR;
     }
 
-    (*handle)->conf.Q = conf->Q;
-    (*handle)->conf.R = conf->R;
+    MicroKal_Obj_t *obj = *handle;
 
-    return MICROKAL_OK;
-}
+    // 预测
+    obj->predictValue = obj->A * obj->predictValue;
+    obj->P = obj->A * obj->P * obj->A + obj->conf.Q;
 
-MicroKal_State_t MicroKal_DeInit(MicroKal_Handle_t *handle)
-{
-    if (handle == NULL || *handle == NULL) {
-        return MICROKAL_ERR;
-    }
+    // 卡尔曼增益
+    obj->Gain = obj->P * obj->H / (obj->P * obj->H * obj->H + obj->conf.R);
 
-    free(*handle);
-    *handle = NULL;
+    // 更新
+    obj->predictValue = obj->predictValue + obj->Gain * (measure - obj->H * obj->predictValue);
+    obj->P = (1 - obj->Gain * obj->H) * obj->P;
 
+    // 防止协方差变负
+    if (obj->P < 1e-6f) obj->P = 1e-6f;
+
+    *result = (uint32_t)obj->predictValue;
     return MICROKAL_OK;
 }
